@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Helga's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Singular Systems brand colors */
+    --brand-green: #5BC97F;
+    --brand-green-light: #7DD89A;
+    --brand-green-dark: #3FA868;
+    --brand-navy: #0F1F2E;
+    --brand-navy-light: #1A2D42;
+
+    --bg: #0a1424;
+    --bg-elevated: #131e30;
+    --bg-card: #1a2a3f;
+    --border: #2a3a52;
+    --text: #e6ecf2;
+    --text-muted: #8a9bb4;
+    --accent: var(--brand-green);
+    --accent-hover: var(--brand-green-dark);
+    --danger: #ef4444;
+    --success: #22c55e;
+    --warning: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    padding: 24px 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+  }
+  /* Helga's Dashboard wordmark — branded styling */
+  header h1 {
+    margin: 0;
+    font-family: 'Nunito', 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    user-select: none;
+  }
+  header h1 .helgas { color: var(--brand-green); }
+  header h1 .dashboard { color: var(--text); }
+  header .subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .tabs-bar {
+    margin: 16px 32px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+    top: 1px;
+  }
+  .tab:hover {
+    background: var(--bg-elevated);
+    color: var(--text);
+  }
+  .tab.active {
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-bottom-color: var(--bg-card);
+    border-top: 2px solid var(--brand-green);
+    padding-top: 9px;
+  }
+  .tab .close-x {
+    margin-left: 4px;
+    color: var(--text-muted);
+    font-size: 16px;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .tab .close-x:hover {
+    background: var(--danger);
+    color: white;
+  }
+  .tab.add-tab {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  main {
+    padding: 24px 32px 64px;
+  }
+  .panel {
+    display: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0 8px 8px 8px;
+    padding: 24px;
+    min-height: 60vh;
+  }
+  .panel.active { display: block; }
+  .panel h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+  }
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  button.btn, .btn {
+    background: var(--accent);
+    color: var(--brand-navy);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  button.btn:hover { background: var(--brand-green-light); }
+  button.btn.danger { color: white; }
+  button.btn.secondary {
+    background: var(--bg-elevated);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  button.btn.secondary:hover { background: var(--border); }
+  button.btn.danger { background: var(--danger); }
+  button.btn.danger:hover { background: #dc2626; }
+  input[type="text"], input[type="url"], input[type="search"], textarea, select {
+    background: var(--bg-elevated);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    width: 100%;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  textarea { resize: vertical; min-height: 100px; }
+  .empty-state {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 40px 20px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+  }
+
+  /* Photos */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .photo-card {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--bg-elevated);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-card .photo-actions {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: none;
+    gap: 4px;
+  }
+  .photo-card:hover .photo-actions { display: flex; }
+  .photo-card .photo-actions button {
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .photo-card .photo-actions button:hover { background: var(--danger); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: none;
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* Shortcuts */
+  .shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .shortcut-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: border 0.15s, transform 0.15s;
+    position: relative;
+  }
+  .shortcut-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .shortcut-card .favicon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    overflow: hidden;
+  }
+  .shortcut-card .favicon img { width: 100%; height: 100%; object-fit: cover; }
+  .shortcut-card .title {
+    font-size: 13px;
+    font-weight: 500;
+    word-break: break-word;
+  }
+  .shortcut-card .url {
+    color: var(--text-muted);
+    font-size: 11px;
+    word-break: break-all;
+    margin-top: 4px;
+  }
+  .shortcut-card .delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    display: none;
+    font-size: 14px;
+  }
+  .shortcut-card:hover .delete { display: block; }
+  .shortcut-card .delete:hover { background: var(--danger); color: white; }
+
+  /* Notes */
+  .notes-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    min-height: 500px;
+  }
+  .notes-list {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .note-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .note-item:hover { background: var(--border); }
+  .note-item.active {
+    background: var(--brand-navy-light);
+    color: var(--text);
+    border-left: 3px solid var(--brand-green);
+    padding-left: 9px;
+  }
+  .note-item .note-title-preview { font-weight: 500; font-size: 13px; }
+  .note-item .note-date { font-size: 11px; color: var(--text-muted); }
+  .note-item.active .note-date { color: var(--text-muted); }
+  .note-editor { display: flex; flex-direction: column; gap: 8px; }
+  .note-editor input { font-size: 16px; font-weight: 600; }
+  .note-editor textarea { min-height: 400px; font-family: ui-monospace, monospace; }
+
+  /* To-do */
+  .todo-list { list-style: none; padding: 0; margin: 0; }
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    background: var(--bg-elevated);
+  }
+  .todo-item input[type="checkbox"] {
+    width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);
+  }
+  .todo-item .text { flex: 1; }
+  .todo-item.done .text { text-decoration: line-through; color: var(--text-muted); }
+  .todo-item button.delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+  .todo-item button.delete-btn:hover { background: var(--danger); color: white; }
+
+  /* Movies */
+  .movies-grid { display: grid; gap: 10px; }
+  .movie-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .movie-card .info { flex: 1; }
+  .movie-card .title { font-weight: 600; font-size: 15px; }
+  .movie-card .meta { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+  .movie-card .stars { color: var(--warning); font-size: 14px; letter-spacing: 1px; }
+  .movie-card.watched { opacity: 0.55; }
+  .movie-card.watched .title { text-decoration: line-through; }
+  .movie-card .actions { display: flex; gap: 4px; }
+  .movie-card .actions button {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .movie-card .actions button:hover { background: var(--bg-card); color: var(--text); }
+  .movie-card .actions button.danger:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+  /* Custom tab */
+  .custom-tab-content textarea { min-height: 400px; }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 16px;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 420px;
+    width: 100%;
+  }
+  .modal h3 { margin: 0 0 16px; }
+  .modal .field { margin-bottom: 12px; }
+  .modal .field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .modal .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+  /* Drag-drop overlay */
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    text-align: center;
+    color: var(--text-muted);
+    transition: border 0.15s, background 0.15s;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(91, 201, 127, 0.08);
+    color: var(--accent);
+  }
+
+  @media (max-width: 700px) {
+    header, .tabs-bar, main { padding-left: 16px; padding-right: 16px; margin-left: 0; margin-right: 0; }
+    .notes-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div>
+      <h1><span class="helgas">helga's</span><span class="dashboard">dashboard</span></h1>
+      <div class="subtitle">Your personal hub — all data is saved in your browser</div>
+    </div>
+  </div>
+  <div>
+    <button class="btn secondary" id="exportBtn" title="Download all data as JSON">Export</button>
+    <button class="btn secondary" id="importBtn" title="Import data from JSON">Import</button>
+    <input type="file" id="importInput" accept="application/json" style="display:none" />
+  </div>
+</header>
+
+<div class="tabs-bar" id="tabsBar"></div>
+<main id="panels"></main>
+
+<!-- Lightbox for photos -->
+<div class="lightbox" id="lightbox">
+  <button class="close" id="lightboxClose">&times;</button>
+  <img id="lightboxImg" alt="" />
+</div>
+
+<!-- Generic Modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============================================================
+   STORAGE
+   ============================================================ */
+const STORAGE_KEY = 'helga_dashboard_v1';
+
+const defaultState = {
+  activeTab: 'photos',
+  tabs: [
+    { id: 'photos', label: 'Photos', icon: '📷', type: 'photos', custom: false },
+    { id: 'shortcuts', label: 'Shortcuts', icon: '🔗', type: 'shortcuts', custom: false },
+    { id: 'notes', label: 'Notes', icon: '📝', type: 'notes', custom: false },
+    { id: 'todo', label: 'To-Do', icon: '✅', type: 'todo', custom: false },
+    { id: 'movies', label: 'Movies', icon: '🎬', type: 'movies', custom: false }
+  ],
+  data: {
+    photos: [],     // [{id, name, dataUrl, addedAt}]
+    shortcuts: [],  // [{id, title, url}]
+    notes: [],      // [{id, title, body, updatedAt}]
+    activeNoteId: null,
+    todo: [],       // [{id, text, done}]
+    movies: []      // [{id, title, year, rating, watched, note}]
+  },
+  customData: {}    // {tabId: {text: ''}}
+};
+
+let state = load();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(defaultState);
+    const parsed = JSON.parse(raw);
+    // Merge with default to handle new fields
+    return { ...structuredClone(defaultState), ...parsed,
+      data: { ...defaultState.data, ...(parsed.data || {}) },
+      customData: { ...(parsed.customData || {}) },
+      tabs: parsed.tabs || defaultState.tabs };
+  } catch (e) {
+    console.warn('Failed to load state', e);
+    return structuredClone(defaultState);
+  }
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    alert('Could not save data — your browser storage may be full. Try removing some photos.');
+    console.error(e);
+  }
+}
+
+function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+const tabsBar = document.getElementById('tabsBar');
+const panels = document.getElementById('panels');
+
+function renderAll() {
+  renderTabs();
+  renderPanels();
+  showActivePanel();
+}
+
+function renderTabs() {
+  tabsBar.innerHTML = '';
+  state.tabs.forEach(tab => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (state.activeTab === tab.id ? ' active' : '');
+    btn.dataset.tab = tab.id;
+    btn.innerHTML = `<span>${tab.icon || '📌'}</span><span>${escapeHtml(tab.label)}</span>` +
+      (tab.custom ? `<span class="close-x" data-close="${tab.id}" title="Remove tab">&times;</span>` : '');
+    btn.addEventListener('click', e => {
+      if (e.target.dataset.close) {
+        if (confirm('Remove this tab and its data?')) removeTab(tab.id);
+        e.stopPropagation();
+        return;
+      }
+      setActiveTab(tab.id);
+    });
+    tabsBar.appendChild(btn);
+  });
+  // Add new tab button
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tab add-tab';
+  addBtn.innerHTML = '+ New tab';
+  addBtn.addEventListener('click', openNewTabModal);
+  tabsBar.appendChild(addBtn);
+}
+
+function renderPanels() {
+  panels.innerHTML = '';
+  state.tabs.forEach(tab => {
+    const panel = document.createElement('section');
+    panel.className = 'panel' + (state.activeTab === tab.id ? ' active' : '');
+    panel.id = 'panel-' + tab.id;
+    panels.appendChild(panel);
+    renderPanelContent(tab, panel);
+  });
+}
+
+function showActivePanel() {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const active = document.getElementById('panel-' + state.activeTab);
+  if (active) active.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const activeTabBtn = document.querySelector(`.tab[data-tab="${state.activeTab}"]`);
+  if (activeTabBtn) activeTabBtn.classList.add('active');
+}
+
+function setActiveTab(id) {
+  state.activeTab = id;
+  save();
+  showActivePanel();
+}
+
+function renderPanelContent(tab, container) {
+  switch (tab.type) {
+    case 'photos': renderPhotosTab(container); break;
+    case 'shortcuts': renderShortcutsTab(container); break;
+    case 'notes': renderNotesTab(container); break;
+    case 'todo': renderTodoTab(container); break;
+    case 'movies': renderMoviesTab(container); break;
+    case 'custom': renderCustomTab(tab, container); break;
+  }
+}
+
+/* ============================================================
+   PHOTOS TAB
+   ============================================================ */
+function renderPhotosTab(c) {
+  c.innerHTML = `
+    <h2>📷 Photos</h2>
+    <div class="drop-zone" id="photoDrop">
+      <div>Drag & drop photos here, or <strong>click to upload</strong></div>
+      <input type="file" id="photoInput" accept="image/*" multiple style="display:none" />
+    </div>
+    <div class="toolbar">
+      <span style="color: var(--text-muted); font-size: 13px;">${state.data.photos.length} photo(s)</span>
+      <div style="flex:1"></div>
+      ${state.data.photos.length ? `<button class="btn secondary danger" id="clearPhotos">Clear all</button>` : ''}
+    </div>
+    <div class="photo-grid" id="photoGrid"></div>
+  `;
+  const grid = c.querySelector('#photoGrid');
+  if (!state.data.photos.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1">No photos yet. Upload some above!</div>`;
+  } else {
+    state.data.photos.forEach(photo => {
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      card.innerHTML = `
+        <img src="${photo.dataUrl}" alt="${escapeHtml(photo.name || '')}" />
+        <div class="photo-actions">
+          <button title="Delete" data-del="${photo.id}">🗑</button>
+        </div>
+      `;
+      card.addEventListener('click', e => {
+        if (e.target.dataset.del) {
+          if (confirm('Delete this photo?')) {
+            state.data.photos = state.data.photos.filter(p => p.id !== photo.id);
+            save(); renderPanelContent(getTab('photos'), c);
+          }
+          return;
+        }
+        openLightbox(photo.dataUrl);
+      });
+      grid.appendChild(card);
+    });
+  }
+  const drop = c.querySelector('#photoDrop');
+  const input = c.querySelector('#photoInput');
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+  drop.addEventListener('drop', e => {
+    e.preventDefault();
+    drop.classList.remove('dragover');
+    handlePhotoFiles(e.dataTransfer.files, c);
+  });
+  input.addEventListener('change', e => handlePhotoFiles(e.target.files, c));
+
+  const clearBtn = c.querySelector('#clearPhotos');
+  if (clearBtn) clearBtn.addEventListener('click', () => {
+    if (confirm('Delete ALL photos? This cannot be undone.')) {
+      state.data.photos = [];
+      save(); renderPanelContent(getTab('photos'), c);
+    }
+  });
+}
+
+function handlePhotoFiles(files, container) {
+  const photoFiles = [...files].filter(f => f.type.startsWith('image/'));
+  if (!photoFiles.length) return;
+  let processed = 0;
+  photoFiles.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.data.photos.unshift({
+        id: uid(),
+        name: file.name,
+        dataUrl: e.target.result,
+        addedAt: Date.now()
+      });
+      processed++;
+      if (processed === photoFiles.length) {
+        save();
+        renderPanelContent(getTab('photos'), container);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('active');
+});
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target.id === 'lightbox') {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+});
+
+/* ============================================================
+   SHORTCUTS TAB
+   ============================================================ */
+function renderShortcutsTab(c) {
+  c.innerHTML = `
+    <h2>🔗 Shortcuts</h2>
+    <div class="toolbar">
+      <input type="text" id="shortcutTitle" placeholder="Title (e.g. Gmail)" style="max-width: 200px" />
+      <input type="url" id="shortcutUrl" placeholder="https://example.com" style="max-width: 320px" />
+      <button class="btn" id="addShortcut">Add shortcut</button>
+    </div>
+    <div class="shortcuts-grid" id="shortcutsGrid"></div>
+  `;
+  const grid = c.querySelector('#shortcutsGrid');
+  if (!state.data.shortcuts.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1">No shortcuts yet. Add your first one above!</div>`;
+  } else {
+    state.data.shortcuts.forEach(sc => {
+      const a = document.createElement('a');
+      a.className = 'shortcut-card';
+      a.href = sc.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      const domain = (() => { try { return new URL(sc.url).hostname; } catch { return sc.url; } })();
+      const faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
+      a.innerHTML = `
+        <button class="delete" data-del="${sc.id}" title="Delete">&times;</button>
+        <div class="favicon"><img src="${faviconUrl}" alt="" onerror="this.parentNode.innerHTML='🔗'" /></div>
+        <div class="title">${escapeHtml(sc.title)}</div>
+        <div class="url">${escapeHtml(domain)}</div>
+      `;
+      a.addEventListener('click', e => {
+        if (e.target.dataset.del) {
+          e.preventDefault();
+          if (confirm('Remove this shortcut?')) {
+            state.data.shortcuts = state.data.shortcuts.filter(x => x.id !== sc.id);
+            save(); renderPanelContent(getTab('shortcuts'), c);
+          }
+        }
+      });
+      grid.appendChild(a);
+    });
+  }
+  c.querySelector('#addShortcut').addEventListener('click', () => {
+    const title = c.querySelector('#shortcutTitle').value.trim();
+    let url = c.querySelector('#shortcutUrl').value.trim();
+    if (!title || !url) { alert('Please enter both a title and a URL'); return; }
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    state.data.shortcuts.push({ id: uid(), title, url });
+    save(); renderPanelContent(getTab('shortcuts'), c);
+  });
+  // Enter to submit
+  c.querySelector('#shortcutUrl').addEventListener('keydown', e => {
+    if (e.key === 'Enter') c.querySelector('#addShortcut').click();
+  });
+}
+
+/* ============================================================
+   NOTES TAB
+   ============================================================ */
+function renderNotesTab(c) {
+  // Pick active note
+  let activeId = state.data.activeNoteId;
+  if (!activeId || !state.data.notes.find(n => n.id === activeId)) {
+    activeId = state.data.notes[0]?.id || null;
+    state.data.activeNoteId = activeId;
+  }
+  c.innerHTML = `
+    <h2>📝 Notes</h2>
+    <div class="toolbar">
+      <button class="btn" id="newNote">+ New note</button>
+      ${activeId ? `<button class="btn secondary danger" id="deleteNote">Delete current</button>` : ''}
+    </div>
+    <div class="notes-layout">
+      <div class="notes-list" id="notesList"></div>
+      <div class="note-editor" id="noteEditor"></div>
+    </div>
+  `;
+  const list = c.querySelector('#notesList');
+  if (!state.data.notes.length) {
+    list.innerHTML = `<div class="empty-state" style="margin: 12px">No notes</div>`;
+  } else {
+    state.data.notes
+      .slice()
+      .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
+      .forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'note-item' + (note.id === activeId ? ' active' : '');
+        item.innerHTML = `
+          <div class="note-title-preview">${escapeHtml(note.title || 'Untitled')}</div>
+          <div class="note-date">${formatDate(note.updatedAt)}</div>
+        `;
+        item.addEventListener('click', () => {
+          state.data.activeNoteId = note.id;
+          save(); renderPanelContent(getTab('notes'), c);
+        });
+        list.appendChild(item);
+      });
+  }
+  const editor = c.querySelector('#noteEditor');
+  if (!activeId) {
+    editor.innerHTML = `<div class="empty-state">Click "+ New note" to start writing</div>`;
+  } else {
+    const note = state.data.notes.find(n => n.id === activeId);
+    editor.innerHTML = `
+      <input type="text" id="noteTitle" value="${escapeAttr(note.title)}" placeholder="Note title" />
+      <textarea id="noteBody" placeholder="Start writing...">${escapeHtml(note.body || '')}</textarea>
+      <div style="color: var(--text-muted); font-size: 12px;">Last updated: ${formatDate(note.updatedAt)} — Auto-saved</div>
+    `;
+    const titleInput = editor.querySelector('#noteTitle');
+    const bodyInput = editor.querySelector('#noteBody');
+    const saveNote = debounce(() => {
+      note.title = titleInput.value;
+      note.body = bodyInput.value;
+      note.updatedAt = Date.now();
+      save();
+      // Update list label without full re-render
+      const items = list.querySelectorAll('.note-item');
+      items.forEach((it, idx) => {
+        const sorted = state.data.notes.slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+        const n = sorted[idx];
+        if (n) it.querySelector('.note-title-preview').textContent = n.title || 'Untitled';
+      });
+    }, 400);
+    titleInput.addEventListener('input', saveNote);
+    bodyInput.addEventListener('input', saveNote);
+  }
+  c.querySelector('#newNote').addEventListener('click', () => {
+    const newNote = { id: uid(), title: '', body: '', updatedAt: Date.now() };
+    state.data.notes.push(newNote);
+    state.data.activeNoteId = newNote.id;
+    save(); renderPanelContent(getTab('notes'), c);
+    setTimeout(() => c.querySelector('#noteTitle')?.focus(), 50);
+  });
+  const delBtn = c.querySelector('#deleteNote');
+  if (delBtn) delBtn.addEventListener('click', () => {
+    if (confirm('Delete this note?')) {
+      state.data.notes = state.data.notes.filter(n => n.id !== activeId);
+      state.data.activeNoteId = state.data.notes[0]?.id || null;
+      save(); renderPanelContent(getTab('notes'), c);
+    }
+  });
+}
+
+/* ============================================================
+   TO-DO TAB
+   ============================================================ */
+function renderTodoTab(c) {
+  const remaining = state.data.todo.filter(t => !t.done).length;
+  c.innerHTML = `
+    <h2>✅ To-Do</h2>
+    <div class="toolbar">
+      <input type="text" id="todoInput" placeholder="What needs to be done?" />
+      <button class="btn" id="addTodo">Add</button>
+    </div>
+    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
+      ${remaining} of ${state.data.todo.length} remaining
+      ${state.data.todo.some(t => t.done) ? `<button class="btn secondary" id="clearDone" style="margin-left: 10px">Clear completed</button>` : ''}
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+  `;
+  const list = c.querySelector('#todoList');
+  if (!state.data.todo.length) {
+    list.innerHTML = `<div class="empty-state">No tasks yet — add one above</div>`;
+  } else {
+    state.data.todo.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'todo-item' + (t.done ? ' done' : '');
+      li.innerHTML = `
+        <input type="checkbox" ${t.done ? 'checked' : ''} />
+        <span class="text">${escapeHtml(t.text)}</span>
+        <button class="delete-btn" title="Delete">&times;</button>
+      `;
+      li.querySelector('input').addEventListener('change', e => {
+        t.done = e.target.checked;
+        save(); renderPanelContent(getTab('todo'), c);
+      });
+      li.querySelector('.delete-btn').addEventListener('click', () => {
+        state.data.todo = state.data.todo.filter(x => x.id !== t.id);
+        save(); renderPanelContent(getTab('todo'), c);
+      });
+      list.appendChild(li);
+    });
+  }
+  const addTodo = () => {
+    const input = c.querySelector('#todoInput');
+    const text = input.value.trim();
+    if (!text) return;
+    state.data.todo.push({ id: uid(), text, done: false });
+    save(); renderPanelContent(getTab('todo'), c);
+  };
+  c.querySelector('#addTodo').addEventListener('click', addTodo);
+  c.querySelector('#todoInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTodo();
+  });
+  const clearDone = c.querySelector('#clearDone');
+  if (clearDone) clearDone.addEventListener('click', () => {
+    state.data.todo = state.data.todo.filter(t => !t.done);
+    save(); renderPanelContent(getTab('todo'), c);
+  });
+}
+
+/* ============================================================
+   MOVIES TAB
+   ============================================================ */
+function renderMoviesTab(c) {
+  c.innerHTML = `
+    <h2>🎬 Movie Recommendations</h2>
+    <div class="toolbar">
+      <button class="btn" id="addMovie">+ Add movie</button>
+      <select id="movieFilter" style="max-width: 180px">
+        <option value="all">All movies</option>
+        <option value="unwatched">Not watched</option>
+        <option value="watched">Watched</option>
+      </select>
+    </div>
+    <div class="movies-grid" id="moviesGrid"></div>
+  `;
+  const filterSel = c.querySelector('#movieFilter');
+  filterSel.value = localStorage.getItem('movieFilter') || 'all';
+  const renderList = () => {
+    const filter = filterSel.value;
+    localStorage.setItem('movieFilter', filter);
+    const grid = c.querySelector('#moviesGrid');
+    grid.innerHTML = '';
+    let list = state.data.movies;
+    if (filter === 'watched') list = list.filter(m => m.watched);
+    else if (filter === 'unwatched') list = list.filter(m => !m.watched);
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-state">No movies in this view</div>`;
+      return;
+    }
+    list.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'movie-card' + (m.watched ? ' watched' : '');
+      const stars = '★'.repeat(m.rating || 0) + '☆'.repeat(5 - (m.rating || 0));
+      card.innerHTML = `
+        <div class="info">
+          <div class="title">${escapeHtml(m.title)}</div>
+          <div class="meta">
+            ${m.year ? escapeHtml(String(m.year)) + ' · ' : ''}
+            <span class="stars">${stars}</span>
+            ${m.note ? ' · ' + escapeHtml(m.note) : ''}
+          </div>
+        </div>
+        <div class="actions">
+          <button title="${m.watched ? 'Mark as not watched' : 'Mark as watched'}" data-toggle="${m.id}">${m.watched ? '↺' : '✓'}</button>
+          <button title="Edit" data-edit="${m.id}">✎</button>
+          <button class="danger" title="Delete" data-del="${m.id}">🗑</button>
+        </div>
+      `;
+      card.addEventListener('click', e => {
+        const t = e.target;
+        if (t.dataset.toggle) { m.watched = !m.watched; save(); renderList(); }
+        if (t.dataset.edit) openMovieModal(m);
+        if (t.dataset.del) {
+          if (confirm('Remove this movie?')) {
+            state.data.movies = state.data.movies.filter(x => x.id !== m.id);
+            save(); renderList();
+          }
+        }
+      });
+      grid.appendChild(card);
+    });
+  };
+  filterSel.addEventListener('change', renderList);
+  c.querySelector('#addMovie').addEventListener('click', () => openMovieModal(null));
+  renderList();
+}
+
+function openMovieModal(existing) {
+  const isEdit = !!existing;
+  showModal(`
+    <h3>${isEdit ? 'Edit movie' : 'Add a movie'}</h3>
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="m_title" value="${existing ? escapeAttr(existing.title) : ''}" placeholder="Movie title" />
+    </div>
+    <div class="field">
+      <label>Year (optional)</label>
+      <input type="text" id="m_year" value="${existing && existing.year ? escapeAttr(String(existing.year)) : ''}" placeholder="2024" />
+    </div>
+    <div class="field">
+      <label>Rating (0-5 stars)</label>
+      <select id="m_rating">
+        ${[0,1,2,3,4,5].map(n => `<option value="${n}" ${existing && existing.rating === n ? 'selected' : ''}>${n} star${n!==1?'s':''}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field">
+      <label>Note / Recommendation source</label>
+      <input type="text" id="m_note" value="${existing && existing.note ? escapeAttr(existing.note) : ''}" placeholder="e.g. Recommended by Sam" />
+    </div>
+    <div class="field">
+      <label><input type="checkbox" id="m_watched" ${existing && existing.watched ? 'checked' : ''} /> Already watched</label>
+    </div>
+    <div class="actions">
+      <button class="btn secondary" id="m_cancel">Cancel</button>
+      <button class="btn" id="m_save">${isEdit ? 'Save' : 'Add movie'}</button>
+    </div>
+  `);
+  document.getElementById('m_cancel').addEventListener('click', closeModal);
+  document.getElementById('m_save').addEventListener('click', () => {
+    const title = document.getElementById('m_title').value.trim();
+    if (!title) { alert('Title is required'); return; }
+    const data = {
+      title,
+      year: document.getElementById('m_year').value.trim() || null,
+      rating: parseInt(document.getElementById('m_rating').value, 10),
+      note: document.getElementById('m_note').value.trim(),
+      watched: document.getElementById('m_watched').checked
+    };
+    if (isEdit) Object.assign(existing, data);
+    else state.data.movies.unshift({ id: uid(), ...data });
+    save();
+    closeModal();
+    renderPanelContent(getTab('movies'), document.getElementById('panel-movies'));
+  });
+  setTimeout(() => document.getElementById('m_title').focus(), 50);
+}
+
+/* ============================================================
+   CUSTOM TABS (free-form notes per tab)
+   ============================================================ */
+function renderCustomTab(tab, c) {
+  const data = state.customData[tab.id] || { text: '' };
+  state.customData[tab.id] = data;
+  c.innerHTML = `
+    <h2>${tab.icon} ${escapeHtml(tab.label)}</h2>
+    <div class="custom-tab-content">
+      <p style="color: var(--text-muted); font-size: 13px;">This is a custom tab. Use it as a freeform notepad — anything you type is saved automatically.</p>
+      <textarea id="customText" placeholder="Type anything here...">${escapeHtml(data.text || '')}</textarea>
+    </div>
+  `;
+  const ta = c.querySelector('#customText');
+  const saveText = debounce(() => {
+    data.text = ta.value;
+    save();
+  }, 400);
+  ta.addEventListener('input', saveText);
+}
+
+/* ============================================================
+   ADD / REMOVE TABS
+   ============================================================ */
+function openNewTabModal() {
+  showModal(`
+    <h3>Add a new tab</h3>
+    <div class="field">
+      <label>Tab name</label>
+      <input type="text" id="t_label" placeholder="e.g. Recipes" />
+    </div>
+    <div class="field">
+      <label>Icon (single emoji)</label>
+      <input type="text" id="t_icon" placeholder="e.g. 🍝" maxlength="2" />
+    </div>
+    <div class="actions">
+      <button class="btn secondary" id="t_cancel">Cancel</button>
+      <button class="btn" id="t_save">Add tab</button>
+    </div>
+  `);
+  document.getElementById('t_cancel').addEventListener('click', closeModal);
+  document.getElementById('t_save').addEventListener('click', () => {
+    const label = document.getElementById('t_label').value.trim();
+    const icon = document.getElementById('t_icon').value.trim() || '📌';
+    if (!label) { alert('Please enter a tab name'); return; }
+    const id = 'custom_' + uid();
+    state.tabs.push({ id, label, icon, type: 'custom', custom: true });
+    state.customData[id] = { text: '' };
+    state.activeTab = id;
+    save(); closeModal(); renderAll();
+  });
+  setTimeout(() => document.getElementById('t_label').focus(), 50);
+}
+
+function removeTab(id) {
+  state.tabs = state.tabs.filter(t => t.id !== id);
+  delete state.customData[id];
+  if (state.activeTab === id) state.activeTab = state.tabs[0]?.id;
+  save(); renderAll();
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modal = document.getElementById('modal');
+function showModal(html) {
+  modal.innerHTML = html;
+  modalBackdrop.classList.add('active');
+}
+function closeModal() {
+  modalBackdrop.classList.remove('active');
+  modal.innerHTML = '';
+}
+modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    document.getElementById('lightbox').classList.remove('active');
+  }
+});
+
+/* ============================================================
+   IMPORT / EXPORT
+   ============================================================ */
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `dashboard-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importInput').click();
+});
+document.getElementById('importInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!confirm('Importing will REPLACE all your current data. Continue?')) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      state = { ...structuredClone(defaultState), ...imported,
+        data: { ...defaultState.data, ...(imported.data || {}) },
+        customData: { ...(imported.customData || {}) },
+        tabs: imported.tabs || defaultState.tabs };
+      save(); renderAll();
+      alert('Import successful!');
+    } catch (err) {
+      alert('Could not read that file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function getTab(id) { return state.tabs.find(t => t.id === id); }
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[ch]);
+}
+function escapeAttr(s) { return escapeHtml(s); }
+function formatDate(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+function debounce(fn, ms) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+renderAll();
+</script>
+</body>
+</html>
